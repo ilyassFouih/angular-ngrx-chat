@@ -1,7 +1,12 @@
-<p *ngFor="let message of messages$ | async">
-  {{ message.body }}, {{ message.status }}
-</p>
+<h1>List of received messages</h1>
+
+<!-- messages -->
+<div class="message-wrapper">
+  <app-message  *ngFor="let message of messages$ | async" [message]="message"></app-message>
+</div>
+
+<!-- form -->
 <form [formGroup]="form" (submit)="sendMessage()">
-  <input formControlName="message" />
+  <input formControlName="message" type="text" placeholder="enter your text"  />
   <button>Submit</button>
 </form>

@@ -1,0 +1,17 @@
+div {
+  padding: 16px;
+  border-radius: 8px;
+  width: 75%;
+  color: white;
+
+  &.my-message {
+    background-color: #0084ff;
+    float: right;
+  }
+
+  &.external-message {
+    background-color: #505050;
+    float: left;
+  }
+
+}

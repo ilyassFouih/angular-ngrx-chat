@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChatStore } from './chat-store/chat.store';
+import { MessageComponent } from './message/message.component';
 
 @Component({
   selector: 'app-chat',
@@ -9,7 +10,7 @@ import { ChatStore } from './chat-store/chat.store';
   styleUrls: ['./chat.component.scss'],
   providers: [ChatStore],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MessageComponent],
 })
 export class ChatComponent {
   protected readonly form = this.fb.nonNullable.group({
