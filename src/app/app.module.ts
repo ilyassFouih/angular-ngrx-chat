@@ -7,13 +7,16 @@ import { LoginComponent } from './login/login.component';
 import { ChatComponent } from './chat/chat.component';
 import { StoreModule } from '@ngrx/store';
 import { loginReducer } from './store/login/login.reducer';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, ChatComponent],
+  declarations: [AppComponent, LoginComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     StoreModule.forRoot({ login: loginReducer }),
+    ChatComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],

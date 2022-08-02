@@ -1,1 +1,7 @@
-<p>chat works!</p>
+<p *ngFor="let message of messages$ | async">
+  {{ message.body }}, {{ message.status }}
+</p>
+<form [formGroup]="form" (submit)="sendMessage()">
+  <input formControlName="message" />
+  <button>Submit</button>
+</form>
