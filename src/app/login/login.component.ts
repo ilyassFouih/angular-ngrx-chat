@@ -1,12 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Store } from '@ngrx/store';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginStore } from '../store/login/login.store';
 
 @Component({
@@ -22,19 +16,7 @@ export class LoginComponent implements OnInit {
     password: ['', [Validators.required]],
   });
 
-  constructor(
-    private store: Store,
-    private fb: FormBuilder,
-    private loginStore: LoginStore
-  ) {}
-
-  get username(): AbstractControl {
-    return this.form.get('username') as AbstractControl;
-  }
-
-  get password(): AbstractControl {
-    return this.form.get('password') as AbstractControl;
-  }
+  constructor(private fb: FormBuilder, private loginStore: LoginStore) {}
 
   ngOnInit(): void {}
 
@@ -46,8 +28,8 @@ export class LoginComponent implements OnInit {
 
     // dispatch login
     this.loginStore.login({
-      username: this.username.value,
-      password: this.password.value,
+      username: this.form.controls.username.value,
+      password: this.form.controls.password.value,
     });
   }
 }
