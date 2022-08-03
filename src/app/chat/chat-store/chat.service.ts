@@ -30,11 +30,17 @@ const isUserLeftEvent = (
   return event.type === WebSocketEvents.USER_LEFT;
 };
 
-const createRandomMessage = (): Message => {
+const usersMock = [
+  { id: crypto.randomUUID(), name: 'MockedUser1' },
+  { id: crypto.randomUUID(), name: 'MockedUser2' },
+  { id: crypto.randomUUID(), name: 'MockedUser3' },
+];
+
+const createRandomMessage = (userId: string): Message => {
   return {
+    userId,
     id: crypto.randomUUID(),
-    userId: crypto.randomUUID(), // to-do: actual user
-    body: crypto.randomUUID(),
+    body: `Hello!`,
     time: new Date().getTime(),
   };
 };
@@ -67,19 +73,36 @@ export class ChatService {
     );
 
   constructor(private http: HttpClient) {
-    // generate random messages every 3s
-    setInterval(
-      () =>
+    // to-do: remove when backend sends mocked data
+    usersMock.forEach((user, index) => {
+      // users join every second
+      setTimeout(() => {
         this.webSocketEvents$.next(
           new MessageEvent('message', {
             data: {
-              type: WebSocketEvents.MESSAGE,
-              data: [createRandomMessage()],
+              type: WebSocketEvents.USER_JOINED,
+              data: user,
             },
           })
-        ),
-      3000
-    );
+        );
+      }, index * 1000);
+
+      // users send message every 3 seconds
+      setTimeout(
+        () =>
+          this.webSocketEvents$.next(
+            new MessageEvent('message', {
+              data: {
+                type: WebSocketEvents.MESSAGE,
+                data: [createRandomMessage(user.id)],
+              },
+            })
+          ),
+        index * 3000
+      );
+
+      // to-do: users leave every 10s
+    });
   }
 
   // simulating an api call that returns created message with real id and time

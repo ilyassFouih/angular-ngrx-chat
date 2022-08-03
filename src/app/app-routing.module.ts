@@ -4,7 +4,6 @@ import { ChatComponent } from './chat/chat.component';
 import { AuthenticationGuard } from './guards/authentication.guard';
 import { LoginComponent } from './login/login.component';
 
-// to-do: add login route
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },

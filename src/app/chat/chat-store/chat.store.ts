@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
 import { concatLatestFrom } from '@ngrx/effects';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import {
+  createEntityAdapter,
+  EntityAdapter,
+  EntityState,
+  Update,
+} from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { mergeMap, pairwise, tap } from 'rxjs/operators';
@@ -114,6 +119,31 @@ export class ChatStore extends ComponentStore<ChatState> {
     );
   });
 
-  // to-do: user joined (websocket event)
-  // to-do: user left (websocket event)
+  // user joined
+  readonly addUser = this.effect((addUser$: Observable<User>) => {
+    return addUser$.pipe(
+      tap(user =>
+        this.setState(state => ({
+          ...state,
+          users: userAdapter.addOne(user, state.users),
+        }))
+      )
+    );
+  });
+
+  // user left
+  readonly updateUser = this.effect((updateUser$: Observable<Update<User>>) => {
+    return updateUser$.pipe(
+      tap(userChanges =>
+        this.setState(state => ({
+          ...state,
+          users: userAdapter.updateOne(userChanges, state.users),
+        }))
+      )
+    );
+  });
+
+  readonly getUserById = (userId: string) => {
+    return this.select(state => state.users.entities[userId]);
+  };
 }

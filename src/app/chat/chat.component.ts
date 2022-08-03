@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 import { LoginStore } from '../store/login/login.store';
+import { Message } from './chat-store/chat.model';
 import { ChatService } from './chat-store/chat.service';
 import { ChatStore } from './chat-store/chat.store';
 import { MessageComponent } from './message/message.component';
@@ -16,13 +17,13 @@ import { MessageComponent } from './message/message.component';
   imports: [CommonModule, ReactiveFormsModule, MessageComponent],
 })
 export class ChatComponent implements OnInit, OnDestroy {
+  private onDestroy$ = new Subject<void>();
   protected readonly form = this.fb.nonNullable.group({
     message: ['', Validators.required],
   });
-  protected readonly messages$ = this.store.allMessages$;
-  private onDestroy$ = new Subject<void>();
-
-  username$!: Observable<string | null>;
+  protected readonly messages$: Observable<Message[]> = this.store.allMessages$;
+  protected readonly username$: Observable<string | null> =
+    this.loginStore.username$;
 
   constructor(
     private fb: FormBuilder,
@@ -32,10 +33,14 @@ export class ChatComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.username$ = this.loginStore.username$;
     this.chatService.messageEvents$
       .pipe(takeUntil(this.onDestroy$))
       .pipe(tap(messages => this.store.addMessages(messages)))
+      .subscribe();
+
+    this.chatService.userJoinedEvents$
+      .pipe(takeUntil(this.onDestroy$))
+      .pipe(tap(user => this.store.addUser(user)))
       .subscribe();
   }
 
