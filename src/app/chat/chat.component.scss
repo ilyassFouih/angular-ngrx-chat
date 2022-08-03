@@ -5,45 +5,17 @@
     display: flex;
     flex-flow: column;
     gap: 12px;
-  }
-
-  form {
-    display: flex;
-    flex-flow: column;
-    gap: 12px;
-    margin-top: 24px;
+    height: 650px;
+    padding: 12px;
+    overflow-y: scroll;
   }
 
   h1 {
     text-align: center;
   }
 
-  input {
-    color: #333;
-    font-size: 16px;
-    margin: 0 auto;
-    padding: 16px;
-    border-radius: 0.2rem;
-    border: none;
-    width: 90%;
-    display: block;
+  h4 {
+    text-align: center;
+    color: #6d6d6d;
   }
-
-  button {
-    background-color: #0084ff;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    width: 80%;
-    margin: auto;
-    cursor: pointer;
-    color: white;
-    font-size: 16px;
-    transition: 0.3s;
-
-    &:hover {
-      background-color: #68b6ff;
-    }
-  }
-
 }

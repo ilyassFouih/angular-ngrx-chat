@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
+import { LoginStore } from '../store/login/login.store';
 import { ChatService } from './chat-store/chat.service';
 import { ChatStore } from './chat-store/chat.store';
 import { MessageComponent } from './message/message.component';
@@ -21,16 +22,20 @@ export class ChatComponent implements OnInit, OnDestroy {
   protected readonly messages$ = this.store.allMessages$;
   private onDestroy$ = new Subject<void>();
 
+  username$!: Observable<string | null>;
+
   constructor(
     private fb: FormBuilder,
     private readonly store: ChatStore,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private loginStore: LoginStore
   ) {}
 
   ngOnInit(): void {
+    this.username$ = this.loginStore.username$;
     this.chatService.messageEvents$
       .pipe(takeUntil(this.onDestroy$))
-      .pipe(tap((messages) => this.store.addMessages(messages)))
+      .pipe(tap(messages => this.store.addMessages(messages)))
       .subscribe();
   }
 

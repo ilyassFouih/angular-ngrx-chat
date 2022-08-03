@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -19,8 +19,9 @@ export class LoginService {
     username: string;
     password: string;
   }): Observable<string> {
-    return this.http
-      .post(this.URL, { params: credentials })
-      .pipe(map(() => 'to-do token selection from header'));
+    return of('dummy-token');
+    // return this.http
+    //   .post(this.URL, { params: credentials })
+    //   .pipe(map(() => 'to-do token selection from header'));
   }
 }
