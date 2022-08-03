@@ -19,7 +19,6 @@ export class AuthenticationGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<UrlTree | boolean> {
-    console.log('can activate');
     return this.loginStore.username$.pipe(
       map(username => {
         if (username) {

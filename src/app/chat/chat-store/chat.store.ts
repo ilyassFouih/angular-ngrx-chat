@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
 import { concatLatestFrom } from '@ngrx/effects';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { mergeMap, pairwise, tap } from 'rxjs/operators';
+import { linkToGlobalState } from 'src/app/core/global.store';
 import { environment } from 'src/environments/environment';
 import { Message, MessageStatus, User } from './chat.model';
 import { ChatService } from './chat.service';
@@ -57,8 +59,9 @@ export class ChatStore extends ComponentStore<ChatState> {
   readonly allUsers$ = this.select(this.users$, selectAllUsers);
   readonly loadingUsers$ = this.select(state => state.users.loading);
 
-  constructor(private chatService: ChatService) {
+  constructor(private chatService: ChatService, private store: Store) {
     super(initialState);
+    linkToGlobalState(this.state$, 'ChatStore', this.store);
     if (!environment.production) {
       this.logging$.subscribe();
     }
