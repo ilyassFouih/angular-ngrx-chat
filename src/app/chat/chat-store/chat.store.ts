@@ -5,7 +5,7 @@ import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Observable, of } from 'rxjs';
 import { mergeMap, pairwise, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Message, User } from './chat.model';
+import { Message, MessageStatus, User } from './chat.model';
 import { ChatService } from './chat.service';
 
 export interface ChatState {
@@ -45,17 +45,17 @@ const { selectAll: selectAllUsers } = userAdapter.getSelectors();
 
 @Injectable()
 export class ChatStore extends ComponentStore<ChatState> {
-  private readonly logging$ = this.select((state) => state).pipe(
+  private readonly logging$ = this.select(state => state).pipe(
     pairwise(),
     tap(([prev, curr]) => console.table({ prev, curr }))
   );
-  readonly userId$ = this.select((state) => state.userId);
-  readonly messages$ = this.select((state) => state.messages);
+  readonly userId$ = this.select(state => state.userId);
+  readonly messages$ = this.select(state => state.messages);
   readonly allMessages$ = this.select(this.messages$, selectAllMessages);
-  readonly loadingMessages$ = this.select((state) => state.messages.loading);
-  readonly users$ = this.select((state) => state.users);
+  readonly loadingMessages$ = this.select(state => state.messages.loading);
+  readonly users$ = this.select(state => state.users);
   readonly allUsers$ = this.select(this.users$, selectAllUsers);
-  readonly loadingUsers$ = this.select((state) => state.users.loading);
+  readonly loadingUsers$ = this.select(state => state.users.loading);
 
   constructor(private chatService: ChatService) {
     super(initialState);
@@ -74,10 +74,10 @@ export class ChatStore extends ComponentStore<ChatState> {
           this.userId$,
         ]),
         tap(([{ body }, { id, time }, userId]) =>
-          this.setState((state) => ({
+          this.setState(state => ({
             ...state,
             messages: messageAdapter.addOne(
-              { id, userId, body, time, status: 'PENDING' },
+              { id, userId, body, time, status: MessageStatus.PENDING },
               state.messages
             ),
           }))
@@ -85,8 +85,8 @@ export class ChatStore extends ComponentStore<ChatState> {
         mergeMap(([{ body }, { id: previousId }, userId]) =>
           this.chatService.sendMessage({ body, userId }).pipe(
             // updating previously inserted message before api call
-            tap((message) =>
-              this.setState((state) => ({
+            tap(message =>
+              this.setState(state => ({
                 ...state,
                 messages: messageAdapter.mapOne(
                   { id: previousId, map: () => message },
@@ -100,7 +100,17 @@ export class ChatStore extends ComponentStore<ChatState> {
     }
   );
 
-  // to-do: added messages (websocket event, always an array so it is only one method?)
+  readonly addMessages = this.effect((addMessages$: Observable<Message[]>) => {
+    return addMessages$.pipe(
+      tap(messages =>
+        this.setState(state => ({
+          ...state,
+          messages: messageAdapter.addMany(messages, state.messages),
+        }))
+      )
+    );
+  });
+
   // to-do: user joined (websocket event)
   // to-do: user left (websocket event)
 }

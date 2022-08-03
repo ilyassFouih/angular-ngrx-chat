@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { Message } from '../chat-store/chat.model';
+import { Message, MessageStatus } from '../chat-store/chat.model';
 
 @Component({
   selector: 'app-message',
@@ -11,10 +11,9 @@ import { Message } from '../chat-store/chat.model';
 })
 export class MessageComponent implements OnInit {
   @Input() message!: Message;
+  protected readonly MessageStatus = MessageStatus;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

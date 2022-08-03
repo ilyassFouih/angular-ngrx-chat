@@ -1,4 +1,7 @@
 <!-- TODO later distinguis between my-message & external-message -->
 <div class="my-message">
-  {{ message.body }}, {{ message.status }}
+  {{ message.body }}
+  <ng-container *ngIf="message.status === MessageStatus.PENDING">{{
+    message.status
+  }}</ng-container>
 </div>
