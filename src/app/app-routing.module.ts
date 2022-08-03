@@ -6,14 +6,14 @@ import { LoginComponent } from './login/login.component';
 
 // to-do: add login route
 const routes: Routes = [
-  { path: '', redirectTo: 'chat', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   {
     path: 'chat',
     component: ChatComponent,
     canActivate: [AuthenticationGuard],
   },
-  { path: '**', redirectTo: 'chat' },
+  { path: '**', redirectTo: 'login' },
 ];
 
 @NgModule({
