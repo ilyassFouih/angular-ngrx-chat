@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, exhaustMap, map, tap } from 'rxjs/operators';
+import { catchError, exhaustMap, map, switchMap } from 'rxjs/operators';
 import * as LoginActions from './login.actions';
 import { LoginService } from './login.service';
 
@@ -14,7 +14,6 @@ export class LoginEffects {
       exhaustMap(({ username, password }) =>
         this.loginService.login({ username, password }).pipe(
           map(token => LoginActions.loginSuccess({ username, token })),
-          tap(() => this.router.navigate(['chat'])),
           catchError((error: unknown) =>
             of(
               LoginActions.loginFailure({
@@ -25,6 +24,15 @@ export class LoginEffects {
         )
       )
     )
+  );
+
+  loginSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(LoginActions.loginSuccess),
+        switchMap(() => this.router.navigate(['chat']))
+      ),
+    { dispatch: false }
   );
 
   constructor(

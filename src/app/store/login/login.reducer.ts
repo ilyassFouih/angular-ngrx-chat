@@ -22,12 +22,12 @@ export function reducer(state: LoginState | undefined, action: Action) {
   return loginReducer(state, action);
 }
 
-export const loginStateSelector = createFeatureSelector<LoginState>('login');
-export const usernameSelector = createSelector(
-  loginStateSelector,
+export const selectloginState = createFeatureSelector<LoginState>('login');
+export const selectUsername = createSelector(
+  selectloginState,
   state => state.username
 );
-export const tokenSelector = createSelector(
-  loginStateSelector,
+export const selectToken = createSelector(
+  selectloginState,
   state => state.token
 );

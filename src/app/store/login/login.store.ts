@@ -1,18 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import {
-  loginStateSelector,
-  tokenSelector,
-  usernameSelector,
-} from './login.reducer';
+import { selectloginState, selectToken, selectUsername } from './login.reducer';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginStore {
-  loginState$ = this.store.select(loginStateSelector);
-  username$ = this.store.select(usernameSelector);
-  token$ = this.store.select(tokenSelector);
+  loginState$ = this.store.select(selectloginState);
+  username$ = this.store.select(selectUsername);
+  token$ = this.store.select(selectToken);
 
   constructor(private store: Store) {}
 }
