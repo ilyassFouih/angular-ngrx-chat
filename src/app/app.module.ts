@@ -2,11 +2,13 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { HttpClientModule } from '@angular/common/http';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatComponent } from './chat/chat.component';
-import { loginReducer } from './store/login/login.reducer';
+import { LoginStore } from './store/login/login.store';
 
 @NgModule({
   declarations: [AppComponent],
@@ -14,10 +16,12 @@ import { loginReducer } from './store/login/login.reducer';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    StoreModule.forRoot({ login: loginReducer }),
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
+    StoreDevtoolsModule.instrument(),
     ChatComponent,
   ],
-  providers: [],
+  providers: [LoginStore],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -6,7 +6,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { LoginService } from '../store/login/login.service';
+import { Store } from '@ngrx/store';
+import { LoginStore } from '../store/login/login.store';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,11 @@ export class LoginComponent implements OnInit {
     password: ['', [Validators.required]],
   });
 
-  constructor(private loginService: LoginService, private fb: FormBuilder) {}
+  constructor(
+    private store: Store,
+    private fb: FormBuilder,
+    private loginStore: LoginStore
+  ) {}
 
   get username(): AbstractControl {
     return this.form.get('username') as AbstractControl;
@@ -40,7 +45,7 @@ export class LoginComponent implements OnInit {
     }
 
     // dispatch login
-    this.loginService.login({
+    this.loginStore.login({
       username: this.username.value,
       password: this.password.value,
     });
