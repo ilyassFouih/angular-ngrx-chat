@@ -4,7 +4,7 @@
   <ng-container *ngIf="message.status === MessageStatus.PENDING">{{
     message.status
   }}</ng-container>
-  <ng-container *ngIf="message.userId | userData | async as user">{{
-    user.name
-  }}</ng-container>
+  <ng-container *ngIf="message.userId | userData | async as user"
+    >{{ user.name }}, {{ user.status }}</ng-container
+  >
 </div>

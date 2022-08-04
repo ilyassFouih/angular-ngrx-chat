@@ -3,6 +3,11 @@ export enum MessageStatus {
   OK = 'OK',
 }
 
+export enum UserStatus {
+  ONLINE = 'ONLINE',
+  OFFLINE = 'OFFLINE',
+}
+
 export interface Message {
   id: string;
   userId: string;
@@ -14,6 +19,7 @@ export interface Message {
 export interface User {
   id: string;
   name: string;
+  status?: UserStatus;
 }
 
 export enum WebSocketEvents {

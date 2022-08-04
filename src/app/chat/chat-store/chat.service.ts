@@ -85,7 +85,7 @@ export class ChatService {
             },
           })
         );
-      }, index * 1000);
+      }, (index + 1) * 1000);
 
       // users send message every 3 seconds
       setTimeout(
@@ -98,10 +98,22 @@ export class ChatService {
               },
             })
           ),
-        index * 3000
+        (index + 1) * 3000
       );
 
-      // to-do: users leave every 10s
+      // users leave every 10 seconds
+      setTimeout(
+        () =>
+          this.webSocketEvents$.next(
+            new MessageEvent('message', {
+              data: {
+                type: WebSocketEvents.USER_LEFT,
+                data: user.id,
+              },
+            })
+          ),
+        (index + 1) * 10000
+      );
     });
   }
 

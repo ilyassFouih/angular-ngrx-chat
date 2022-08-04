@@ -9,10 +9,10 @@ import {
 } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
-import { mergeMap, pairwise, tap } from 'rxjs/operators';
+import { map, mergeMap, pairwise, tap } from 'rxjs/operators';
 import { linkToGlobalState } from 'src/app/core/global.store';
 import { environment } from 'src/environments/environment';
-import { Message, MessageStatus, User } from './chat.model';
+import { Message, MessageStatus, User, UserStatus } from './chat.model';
 import { ChatService } from './chat.service';
 
 export interface ChatState {
@@ -125,13 +125,15 @@ export class ChatStore extends ComponentStore<ChatState> {
       tap(user =>
         this.setState(state => ({
           ...state,
-          users: userAdapter.addOne(user, state.users),
+          users: userAdapter.addOne(
+            { ...user, status: user.status ?? UserStatus.ONLINE },
+            state.users
+          ),
         }))
       )
     );
   });
 
-  // user left
   readonly updateUser = this.effect((updateUser$: Observable<Update<User>>) => {
     return updateUser$.pipe(
       tap(userChanges =>
@@ -142,6 +144,19 @@ export class ChatStore extends ComponentStore<ChatState> {
       )
     );
   });
+
+  readonly setUserOffline = this.effect(
+    (setUserOffline$: Observable<string>) => {
+      return setUserOffline$.pipe(
+        map(userId =>
+          this.updateUser({
+            id: userId,
+            changes: { status: UserStatus.OFFLINE },
+          })
+        )
+      );
+    }
+  );
 
   readonly getUserById = (userId: string) => {
     return this.select(state => state.users.entities[userId]);

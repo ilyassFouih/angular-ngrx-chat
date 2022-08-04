@@ -42,6 +42,11 @@ export class ChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.onDestroy$))
       .pipe(tap(user => this.store.addUser(user)))
       .subscribe();
+
+    this.chatService.userLeftEvents$
+      .pipe(takeUntil(this.onDestroy$))
+      .pipe(tap(userId => this.store.setUserOffline(userId)))
+      .subscribe();
   }
 
   ngOnDestroy(): void {
