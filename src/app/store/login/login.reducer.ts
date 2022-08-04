@@ -10,8 +10,9 @@ import { initialState, LoginState } from './login.model';
 
 export const loginReducer = createReducer(
   initialState,
-  on(LoginActions.loginSuccess, (state, { username, token }) => ({
+  on(LoginActions.loginSuccess, (state, { userId, username, token }) => ({
     ...state,
+    userId,
     username,
     token,
   })),
@@ -23,6 +24,10 @@ export function reducer(state: LoginState | undefined, action: Action) {
 }
 
 export const selectloginState = createFeatureSelector<LoginState>('login');
+export const selectUserId = createSelector(
+  selectloginState,
+  state => state.userId
+);
 export const selectUsername = createSelector(
   selectloginState,
   state => state.username

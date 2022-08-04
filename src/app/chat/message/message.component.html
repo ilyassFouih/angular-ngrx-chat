@@ -5,6 +5,7 @@
     message.status
   }}</ng-container>
   <ng-container *ngIf="message.userId | userData | async as user"
-    >{{ user.name }}, {{ user.status }}</ng-container
+    >{{ user.name }} at {{ message.time | date: 'h:mm:ss' }},
+    {{ user.status }}</ng-container
   >
 </div>

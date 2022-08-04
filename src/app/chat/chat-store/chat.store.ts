@@ -11,12 +11,12 @@ import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { map, mergeMap, pairwise, tap } from 'rxjs/operators';
 import { linkToGlobalState } from 'src/app/core/global.store';
+import { LoginStore } from 'src/app/store/login/login.store';
 import { environment } from 'src/environments/environment';
 import { Message, MessageStatus, User, UserStatus } from './chat.model';
 import { ChatService } from './chat.service';
 
 export interface ChatState {
-  userId: string; // to-do: should probably be removed from here and used from the global store
   messages: { loading: boolean } & EntityState<Message>;
   users: { loading: boolean } & EntityState<User>;
 }
@@ -38,7 +38,6 @@ const userAdapter: EntityAdapter<User> = createEntityAdapter<User>({
 });
 
 const initialState: ChatState = {
-  userId: '',
   messages: messageAdapter.getInitialState({
     loading: false,
   }),
@@ -56,7 +55,8 @@ export class ChatStore extends ComponentStore<ChatState> {
     pairwise(),
     tap(([prev, curr]) => console.table({ prev, curr }))
   );
-  readonly userId$ = this.select(state => state.userId);
+  readonly userId$ = this.loginStore.userId$;
+  readonly username$ = this.loginStore.username$;
   readonly messages$ = this.select(state => state.messages);
   readonly allMessages$ = this.select(this.messages$, selectAllMessages);
   readonly loadingMessages$ = this.select(state => state.messages.loading);
@@ -64,7 +64,11 @@ export class ChatStore extends ComponentStore<ChatState> {
   readonly allUsers$ = this.select(this.users$, selectAllUsers);
   readonly loadingUsers$ = this.select(state => state.users.loading);
 
-  constructor(private chatService: ChatService, private store: Store) {
+  constructor(
+    private chatService: ChatService,
+    private store: Store,
+    private loginStore: LoginStore
+  ) {
     super(initialState);
     linkToGlobalState(this.state$, 'ChatStore', this.store);
     if (!environment.production) {
@@ -79,19 +83,39 @@ export class ChatStore extends ComponentStore<ChatState> {
           // creates a random ID and a time to show message as soon as user sends it, even though it is pending
           of({ id: crypto.randomUUID(), time: new Date().getTime() }),
           // to-do: get current user id from global store?
-          this.userId$,
+          this.userId$.pipe(
+            concatLatestFrom(userId => this.getUserById(userId as string))
+          ),
+          this.username$,
         ]),
-        tap(([{ body }, { id, time }, userId]) =>
+        // add current user to chat store if it does not exist
+        tap(([, , [userId, user], username]) => {
+          if (!user) {
+            this.addUser({
+              id: userId as string,
+              name: username as string,
+            });
+          }
+        }),
+        // add message to chat store so it is visible while processed by the backend
+        tap(([{ body }, { id, time }, [userId]]) => {
           this.setState(state => ({
             ...state,
             messages: messageAdapter.addOne(
-              { id, userId, body, time, status: MessageStatus.PENDING },
+              {
+                id,
+                userId: userId as string,
+                body,
+                time,
+                status: MessageStatus.PENDING,
+              },
               state.messages
             ),
-          }))
-        ),
-        mergeMap(([{ body }, { id: previousId }, userId]) =>
-          this.chatService.sendMessage({ body, userId }).pipe(
+          }));
+        }),
+        // send message to backend and then update chat store
+        mergeMap(([{ body }, { id: previousId }, [userId]]) =>
+          this.chatService.sendMessage({ body, userId: userId as string }).pipe(
             // updating previously inserted message before api call
             tap(message =>
               this.setState(state => ({

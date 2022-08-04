@@ -13,7 +13,9 @@ export class LoginEffects {
       ofType(LoginActions.login),
       exhaustMap(({ username, password }) =>
         this.loginService.login({ username, password }).pipe(
-          map(token => LoginActions.loginSuccess({ username, token })),
+          map(({ userId, token }) =>
+            LoginActions.loginSuccess({ userId, username, token })
+          ),
           catchError((error: unknown) =>
             of(
               LoginActions.loginFailure({
