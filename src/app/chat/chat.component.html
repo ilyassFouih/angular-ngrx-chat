@@ -1,13 +1,18 @@
-<h1>List of received messages</h1>
-<h4>Logged in as : {{ username$ | async }}</h4>
+<!-- header -->
+<app-chat-header
+  (usernameChange)="onUsernameChange($event)"
+  [username]="username$ | async">
+</app-chat-header>
 
 <!-- messages -->
 <div class="message-wrapper">
-  <app-message  *ngFor="let message of messages$ | async" [message]="message"></app-message>
+  <app-message
+    *ngFor="let message of messages$ | async"
+    [message]="message"></app-message>
 </div>
 
 <!-- form -->
 <form [formGroup]="form" (submit)="sendMessage()">
-  <input formControlName="message" type="text" placeholder="enter your text"  />
+  <input formControlName="message" type="text" placeholder="enter your text" />
   <button type="submit">Submit</button>
 </form>

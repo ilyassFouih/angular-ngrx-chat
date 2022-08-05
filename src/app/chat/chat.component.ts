@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 import { LoginStore } from '../store/login/login.store';
+import { ChatHeaderComponent } from './chat-header/chat-header.component';
 import { Message } from './chat-store/chat.model';
 import { ChatService } from './chat-store/chat.service';
 import { ChatStore } from './chat-store/chat.store';
@@ -14,7 +15,12 @@ import { MessageComponent } from './message/message.component';
   styleUrls: ['./chat.component.scss'],
   providers: [ChatStore],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MessageComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MessageComponent,
+    ChatHeaderComponent,
+  ],
 })
 export class ChatComponent implements OnInit, OnDestroy {
   private onDestroy$ = new Subject<void>();
@@ -57,5 +63,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   sendMessage(): void {
     this.store.sendMessage({ body: this.form.controls.message.value });
     this.form.controls.message.patchValue('');
+  }
+
+  onUsernameChange(newUsername: string): void {
+    console.log('newUsername', newUsername);
   }
 }
