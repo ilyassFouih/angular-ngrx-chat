@@ -66,6 +66,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   onUsernameChange(newUsername: string): void {
-    console.log('newUsername', newUsername);
+    this.loginStore.changeUsername(newUsername);
   }
 }

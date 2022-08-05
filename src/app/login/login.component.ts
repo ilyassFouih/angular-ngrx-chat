@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import * as LoginActions from '../store/login/login.actions';
+import { LoginStore } from '../store/login/login.store';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -16,7 +15,7 @@ export class LoginComponent implements OnInit {
     password: ['', [Validators.required]],
   });
 
-  constructor(private fb: FormBuilder, private store: Store) {}
+  constructor(private fb: FormBuilder, private loginStore: LoginStore) {}
 
   ngOnInit(): void {}
 
@@ -27,11 +26,9 @@ export class LoginComponent implements OnInit {
     }
 
     // dispatch login
-    this.store.dispatch(
-      LoginActions.login({
-        username: this.form.controls.username.value,
-        password: this.form.controls.password.value,
-      })
+    this.loginStore.login(
+      this.form.controls.username.value,
+      this.form.controls.password.value
     );
   }
 }

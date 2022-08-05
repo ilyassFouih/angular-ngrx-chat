@@ -20,12 +20,11 @@ export const logout = createAction('[Login] Logout');
 // username change actions
 export const usernameChange = createAction(
   '[Login] Username Change',
-  props<{ username: string; password: string }>()
+  props<{ username: string }>()
 );
 
 export const usernameChangeSuccess = createAction(
-  '[Login] Username Change Success',
-  props<{ userId: string; username: string; token: string }>()
+  '[Login] Username Change Success'
 );
 
 export const usernameChangeFailure = createAction(

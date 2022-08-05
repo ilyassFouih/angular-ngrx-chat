@@ -32,9 +32,7 @@ export class ChatHeaderComponent implements OnInit, OnChanges {
 
   constructor(private fb: FormBuilder) {}
 
-  ngOnInit(): void {
-    this.form.valueChanges.subscribe(console.log);
-  }
+  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.form.controls.username.patchValue(changes?.['username']?.currentValue);
@@ -49,7 +47,7 @@ export class ChatHeaderComponent implements OnInit, OnChanges {
     if (this.form.invalid) {
       return;
     }
-
+    this.onEditUsername();
     this.usernameChange.emit(this.form.controls.username.value);
   }
 }
