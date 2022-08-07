@@ -16,3 +16,18 @@ export const loginFailure = createAction(
 );
 
 export const logout = createAction('[Login] Logout');
+
+// username change actions
+export const usernameChange = createAction(
+  '[Login] Username Change',
+  props<{ username: string }>()
+);
+
+export const usernameChangeSuccess = createAction(
+  '[Login] Username Change Success'
+);
+
+export const usernameChangeFailure = createAction(
+  '[Login] Username Change Failure',
+  props<{ errorMsg: string }>()
+);

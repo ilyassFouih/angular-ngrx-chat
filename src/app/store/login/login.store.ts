@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import * as LoginActions from './login.actions';
 import {
   selectloginState,
   selectToken,
   selectUserId,
   selectUsername,
 } from './login.reducer';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -17,4 +17,17 @@ export class LoginStore {
   readonly token$ = this.store.select(selectToken);
 
   constructor(private store: Store) {}
+
+  login(username: string, password: string): void {
+    this.store.dispatch(
+      LoginActions.login({
+        username,
+        password,
+      })
+    );
+  }
+
+  changeUsername(username: string): void {
+    this.store.dispatch(LoginActions.usernameChange({ username }));
+  }
 }
