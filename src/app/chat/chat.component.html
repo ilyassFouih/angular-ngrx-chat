@@ -5,6 +5,7 @@
 <div class="message-wrapper">
   <app-message
     *ngFor="let message of messages$ | async"
+    [authenticatedUserId]="userId$ | async"
     [message]="message"></app-message>
 </div>
 

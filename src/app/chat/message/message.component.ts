@@ -12,5 +12,6 @@ import { UserDataPipe } from './user-data.pipe';
 })
 export class MessageComponent {
   @Input() message!: Message;
+  @Input() authenticatedUserId?: string | null;
   protected readonly MessageStatus = MessageStatus;
 }

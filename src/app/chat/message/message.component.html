@@ -1,5 +1,8 @@
-<!-- TODO later distinguis between my-message & external-message -->
-<div class="my-message">
+<div
+  [ngClass]="{
+    'my-message': authenticatedUserId === message.userId,
+    'external-message': authenticatedUserId !== message.userId
+  }">
   {{ message.body }}
   <ng-container *ngIf="message.status === MessageStatus.PENDING">{{
     message.status

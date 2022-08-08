@@ -33,10 +33,11 @@ export class LoginService {
 
         // fail
         if (!shallWePass) {
-          console.log('%c API error response changing username', 'color: red');
+          console.log('%c API error response for username', 'color: red');
           return throwError(() => Error('Unable to change username'));
         }
         // success
+        console.log('%c API success response for username', 'color: green');
         return of(true);
       })
     );
