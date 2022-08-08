@@ -9,7 +9,7 @@ import {
 } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
-import { map, mergeMap, pairwise, tap } from 'rxjs/operators';
+import { map, mergeMap, pairwise, takeUntil, tap } from 'rxjs/operators';
 import { linkToGlobalState } from 'src/app/core/global.store';
 import { LoginStore } from 'src/app/store/login/login.store';
 import { environment } from 'src/environments/environment';
@@ -74,6 +74,7 @@ export class ChatStore extends ComponentStore<ChatState> {
     if (!environment.production) {
       this.logging$.subscribe();
     }
+    this.watchUsernameChangeAndUpdateUsers();
   }
 
   readonly sendMessage = this.effect(
@@ -185,4 +186,24 @@ export class ChatStore extends ComponentStore<ChatState> {
   readonly getUserById = (userId: string) => {
     return this.select(state => state.users.entities[userId]);
   };
+
+  /*
+    the basic idea is to watch when authenticated user change it's username,
+    once that happens, we want to update the "sender's" name in all messages
+    that the authenticated user made.
+  */
+  private watchUsernameChangeAndUpdateUsers(): void {
+    this.loginStore.loginState$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(loginState => {
+        if (!loginState.userId || !loginState.username) {
+          return;
+        }
+
+        this.updateUser({
+          id: loginState.userId,
+          changes: { name: loginState.username },
+        });
+      });
+  }
 }
