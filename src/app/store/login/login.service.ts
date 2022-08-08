@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, switchMap, throwError, timer } from 'rxjs';
 import { LoginResponse } from './login.model';
 
 @Injectable({
@@ -26,15 +26,19 @@ export class LoginService {
     //   .pipe(map(() => 'to-do token selection from header'));
   }
 
-  changeUsername(newUsername: string): Observable<boolean> {
-    const shallWePass = Math.random() > 0.5;
+  changeUsername(newUsername: string): Observable<boolean | Error> {
+    return timer(2000).pipe(
+      switchMap(() => {
+        const shallWePass = Math.random() > 0.5;
 
-    // fail
-    if (!shallWePass) {
-      console.log('%c API error response changing username', 'color: red');
-      return throwError(() => Error('Unable to change username'));
-    }
-    // success
-    return of(true);
+        // fail
+        if (!shallWePass) {
+          console.log('%c API error response changing username', 'color: red');
+          return throwError(() => Error('Unable to change username'));
+        }
+        // success
+        return of(true);
+      })
+    );
   }
 }

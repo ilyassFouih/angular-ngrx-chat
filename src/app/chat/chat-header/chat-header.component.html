@@ -2,8 +2,8 @@
 
 <!-- unedited form -->
 <div class="wrapper" [ngClass]="{ 'wrapper-center': !editUsername }">
-  <ng-container *ngIf="!editUsername; else showEditUsername">
-    <h4>Logged in as : {{ username }}</h4>
+  <ng-container *ngIf="!editUsername">
+    <h4>Logged in as : {{ username$ | async }}</h4>
     <img
       src="assets/edit_icon.svg"
       alt="edit icon"
@@ -12,13 +12,16 @@
 </div>
 
 <!-- edit username -->
-<ng-template #showEditUsername>
-  <form [formGroup]="form" (submit)="submitEditedUsenrame()">
+<ng-container *ngIf="editUsername">
+  <form [formGroup]="form" (submit)="submitEditedUsername()">
     <input
       formControlName="username"
       type="text"
       placeholder="enter your new username" />
     <button type="submit">change name</button>
+    <button type="button" class="cancel-button" (click)="onEditUsername()">
+      cancel
+    </button>
   </form>
 
   <!-- required error -->
@@ -28,7 +31,7 @@
     Username is required
   </div>
 
-  <!-- min width errir -->
+  <!-- min width error -->
   <div
     *ngIf="form.controls.username.errors?.['minlength']"
     class="error-message">
@@ -41,4 +44,4 @@
     class="error-message">
     Username max length is 20 characters
   </div>
-</ng-template>
+</ng-container>

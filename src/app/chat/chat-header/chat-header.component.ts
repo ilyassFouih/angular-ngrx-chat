@@ -1,14 +1,8 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Observable, Subject, takeUntil } from 'rxjs';
+import { LoginStore } from 'src/app/store/login/login.store';
 
 @Component({
   selector: 'app-chat-header',
@@ -17,10 +11,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
 })
-export class ChatHeaderComponent implements OnInit, OnChanges {
-  @Output() usernameChange: EventEmitter<string> = new EventEmitter<string>();
-  @Input() username?: string | null;
-
+export class ChatHeaderComponent implements OnInit, OnDestroy {
   protected readonly form = this.fb.nonNullable.group({
     username: [
       '',
@@ -30,24 +21,34 @@ export class ChatHeaderComponent implements OnInit, OnChanges {
 
   editUsername = false;
 
-  constructor(private fb: FormBuilder) {}
+  protected readonly username$: Observable<string | null> =
+    this.loginStore.username$;
 
-  ngOnInit(): void {}
+  private onDestroy$ = new Subject<void>();
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.form.controls.username.patchValue(changes?.['username']?.currentValue);
+  constructor(private fb: FormBuilder, private loginStore: LoginStore) {}
+
+  ngOnInit(): void {
+    this.username$.pipe(takeUntil(this.onDestroy$)).subscribe(username => {
+      this.form.controls.username.patchValue(username ?? '');
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
   }
 
   onEditUsername(): void {
     this.editUsername = !this.editUsername;
   }
 
-  submitEditedUsenrame(): void {
+  submitEditedUsername(): void {
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
     }
     this.onEditUsername();
-    this.usernameChange.emit(this.form.controls.username.value);
+    const newUsername = this.form.controls.username.value;
+    this.loginStore.changeUsername(newUsername);
   }
 }

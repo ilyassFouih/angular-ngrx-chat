@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
-import { LoginStore } from '../store/login/login.store';
 import { ChatHeaderComponent } from './chat-header/chat-header.component';
 import { Message } from './chat-store/chat.model';
 import { ChatService } from './chat-store/chat.service';
@@ -28,14 +27,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     message: ['', Validators.required],
   });
   protected readonly messages$: Observable<Message[]> = this.store.allMessages$;
-  protected readonly username$: Observable<string | null> =
-    this.loginStore.username$;
 
   constructor(
     private fb: FormBuilder,
     private readonly store: ChatStore,
-    private chatService: ChatService,
-    private loginStore: LoginStore
+    private chatService: ChatService
   ) {}
 
   ngOnInit(): void {
@@ -63,9 +59,5 @@ export class ChatComponent implements OnInit, OnDestroy {
   sendMessage(): void {
     this.store.sendMessage({ body: this.form.controls.message.value });
     this.form.controls.message.patchValue('');
-  }
-
-  onUsernameChange(newUsername: string): void {
-    this.loginStore.changeUsername(newUsername);
   }
 }
