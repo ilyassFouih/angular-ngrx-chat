@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { delay, of } from 'rxjs';
+import { of } from 'rxjs';
 import { catchError, exhaustMap, map, switchMap } from 'rxjs/operators';
 import * as LoginActions from './login.actions';
 import { LoginService } from './login.service';
@@ -40,8 +40,7 @@ export class LoginEffects {
   changeUsername$ = createEffect(() =>
     this.actions$.pipe(
       ofType(LoginActions.usernameChange),
-      delay(2000), // mocking an http request
-      switchMap(({ username }) =>
+      exhaustMap(({ username }) =>
         this.loginService.changeUsername(username).pipe(
           map(() => LoginActions.usernameChangeSuccess()),
           catchError((error: unknown) =>

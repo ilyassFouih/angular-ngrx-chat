@@ -1,13 +1,11 @@
 <!-- header -->
-<app-chat-header
-  (usernameChange)="onUsernameChange($event)"
-  [username]="username$ | async">
-</app-chat-header>
+<app-chat-header> </app-chat-header>
 
 <!-- messages -->
-<div class="message-wrapper">
+<div *ngIf="userId$ | async as authenticatedUserId" class="message-wrapper">
   <app-message
     *ngFor="let message of messages$ | async"
+    [authenticatedUserId]="authenticatedUserId"
     [message]="message"></app-message>
 </div>
 

@@ -28,8 +28,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     message: ['', Validators.required],
   });
   protected readonly messages$: Observable<Message[]> = this.store.allMessages$;
-  protected readonly username$: Observable<string | null> =
-    this.loginStore.username$;
+
+  userId$!: Observable<string | null>;
 
   constructor(
     private fb: FormBuilder,
@@ -39,6 +39,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.userId$ = this.loginStore.userId$;
     this.chatService.messageEvents$
       .pipe(takeUntil(this.onDestroy$))
       .pipe(tap(messages => this.store.addMessages(messages)))
@@ -63,9 +64,5 @@ export class ChatComponent implements OnInit, OnDestroy {
   sendMessage(): void {
     this.store.sendMessage({ body: this.form.controls.message.value });
     this.form.controls.message.patchValue('');
-  }
-
-  onUsernameChange(newUsername: string): void {
-    this.loginStore.changeUsername(newUsername);
   }
 }
