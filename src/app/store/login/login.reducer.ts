@@ -41,6 +41,10 @@ export function reducer(state: LoginState | undefined, action: Action) {
 }
 
 export const selectloginState = createFeatureSelector<LoginState>('login');
+export const selectUserData = createSelector(selectloginState, state => ({
+  userId: state.userId,
+  username: state.username,
+}));
 export const selectUserId = createSelector(
   selectloginState,
   state => state.userId

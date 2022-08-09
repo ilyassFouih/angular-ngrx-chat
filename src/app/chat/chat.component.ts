@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { LoginStore } from '../store/login/login.store';
@@ -21,23 +21,21 @@ import { MessageComponent } from './message/message.component';
     ChatHeaderComponent,
   ],
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent {
   protected readonly form = this.fb.nonNullable.group({
     message: ['', Validators.required],
   });
   protected readonly messages$: Observable<Message[]> = this.store.allMessages$;
-
-  userId$!: Observable<string | null>;
+  protected readonly userData$: Observable<{
+    userId: string | null;
+    username: string | null;
+  }> = this.loginStore.userData$;
 
   constructor(
     private fb: FormBuilder,
     private readonly store: ChatStore,
     private loginStore: LoginStore
   ) {}
-
-  ngOnInit(): void {
-    this.userId$ = this.loginStore.userId$;
-  }
 
   sendMessage(): void {
     this.store.sendMessage({ body: this.form.controls.message.value });

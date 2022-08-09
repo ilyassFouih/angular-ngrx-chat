@@ -4,6 +4,7 @@ import * as LoginActions from './login.actions';
 import {
   selectloginState,
   selectToken,
+  selectUserData,
   selectUserId,
   selectUsername,
 } from './login.reducer';
@@ -12,6 +13,7 @@ import {
 })
 export class LoginStore {
   readonly loginState$ = this.store.select(selectloginState);
+  readonly userData$ = this.store.select(selectUserData);
   readonly userId$ = this.store.select(selectUserId);
   readonly username$ = this.store.select(selectUsername);
   readonly token$ = this.store.select(selectToken);

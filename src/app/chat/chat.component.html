@@ -2,10 +2,11 @@
 <app-chat-header> </app-chat-header>
 
 <!-- messages -->
-<div *ngIf="userId$ | async as authenticatedUserId" class="message-wrapper">
+<div *ngIf="userData$ | async as userData" class="message-wrapper">
   <app-message
     *ngFor="let message of messages$ | async"
-    [authenticatedUserId]="authenticatedUserId"
+    [authenticatedUserId]="userData.userId"
+    [authenticatedUsername]="userData.username"
     [message]="message"></app-message>
 </div>
 

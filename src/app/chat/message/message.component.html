@@ -7,8 +7,15 @@
   <ng-container *ngIf="message.status === MessageStatus.PENDING">{{
     message.status
   }}</ng-container>
-  <ng-container *ngIf="message.userId | userData | async as user"
-    >{{ user.name }} at {{ message.time | date: 'h:mm:ss' }},
-    {{ user.status }}</ng-container
-  >
+
+  <ng-container *ngIf="authenticatedUserId === message.userId">
+    {{ authenticatedUsername }} at {{ message.time | date: 'h:mm:ss' }}
+  </ng-container>
+
+  <ng-container *ngIf="authenticatedUserId !== message.userId">
+    <ng-container *ngIf="message.userId | userData | async as user"
+      >{{ user.name }} at {{ message.time | date: 'h:mm:ss' }},
+      {{ user.status }}</ng-container
+    >
+  </ng-container>
 </div>
