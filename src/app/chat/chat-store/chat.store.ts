@@ -75,7 +75,26 @@ export class ChatStore extends ComponentStore<ChatState> {
       this.logging$.subscribe();
     }
     this.watchUsernameChangeAndUpdateUsers();
+
+    // start listening to websocket events
+    this.messageEvents(this.chatService.messageEvents$);
+    this.userJoinedEvents(this.chatService.userJoinedEvents$);
+    this.userLeftEvents(this.chatService.userLeftEvents$);
   }
+
+  readonly messageEvents = this.effect(
+    (messageEvents$: Observable<Message[]>) =>
+      messageEvents$.pipe(map(messages => this.addMessages(messages)))
+  );
+
+  readonly userJoinedEvents = this.effect(
+    (userJoinedEvents$: Observable<User>) =>
+      userJoinedEvents$.pipe(map(user => this.addUser(user)))
+  );
+
+  readonly userLeftEvents = this.effect((userLeftEvents$: Observable<string>) =>
+    userLeftEvents$.pipe(map(userId => this.setUserOffline(userId)))
+  );
 
   readonly sendMessage = this.effect(
     (sendMessage$: Observable<{ body: string }>) => {

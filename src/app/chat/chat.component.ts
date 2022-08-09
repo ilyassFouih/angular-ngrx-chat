@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, Subject, takeUntil, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { LoginStore } from '../store/login/login.store';
 import { ChatHeaderComponent } from './chat-header/chat-header.component';
 import { Message } from './chat-store/chat.model';
-import { ChatService } from './chat-store/chat.service';
 import { ChatStore } from './chat-store/chat.store';
 import { MessageComponent } from './message/message.component';
 
@@ -22,8 +21,7 @@ import { MessageComponent } from './message/message.component';
     ChatHeaderComponent,
   ],
 })
-export class ChatComponent implements OnInit, OnDestroy {
-  private onDestroy$ = new Subject<void>();
+export class ChatComponent implements OnInit {
   protected readonly form = this.fb.nonNullable.group({
     message: ['', Validators.required],
   });
@@ -34,31 +32,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private readonly store: ChatStore,
-    private chatService: ChatService,
     private loginStore: LoginStore
   ) {}
 
   ngOnInit(): void {
     this.userId$ = this.loginStore.userId$;
-    this.chatService.messageEvents$
-      .pipe(takeUntil(this.onDestroy$))
-      .pipe(tap(messages => this.store.addMessages(messages)))
-      .subscribe();
-
-    this.chatService.userJoinedEvents$
-      .pipe(takeUntil(this.onDestroy$))
-      .pipe(tap(user => this.store.addUser(user)))
-      .subscribe();
-
-    this.chatService.userLeftEvents$
-      .pipe(takeUntil(this.onDestroy$))
-      .pipe(tap(userId => this.store.setUserOffline(userId)))
-      .subscribe();
-  }
-
-  ngOnDestroy(): void {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
   }
 
   sendMessage(): void {
