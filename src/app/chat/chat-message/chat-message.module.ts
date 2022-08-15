@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MessageComponent } from './message.component';
+import { ChatMessageComponent } from './chat-message.component';
 import { UserDataPipe } from './user-data.pipe';
 
 @NgModule({
-  declarations: [MessageComponent, UserDataPipe],
+  declarations: [ChatMessageComponent, UserDataPipe],
   imports: [CommonModule, ReactiveFormsModule],
-  exports: [MessageComponent, UserDataPipe],
+  exports: [ChatMessageComponent, UserDataPipe],
 })
-export class MessageModule {}
+export class ChatMessageModule {}

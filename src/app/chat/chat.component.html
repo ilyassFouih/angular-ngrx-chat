@@ -1,16 +1,13 @@
-<!-- header -->
 <app-chat-header> </app-chat-header>
 
-<!-- messages -->
 <div *ngIf="userData$ | async as userData" class="message-wrapper">
-  <app-message
+  <app-chat-message
     *ngFor="let message of messages$ | async"
     [authenticatedUserId]="userData.userId"
     [authenticatedUsername]="userData.username"
-    [message]="message"></app-message>
+    [message]="message"></app-chat-message>
 </div>
 
-<!-- form -->
 <form [formGroup]="form" (submit)="sendMessage()">
   <input formControlName="message" type="text" placeholder="enter your text" />
   <button type="submit">Submit</button>

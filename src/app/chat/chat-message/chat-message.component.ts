@@ -2,11 +2,11 @@ import { Component, Input } from '@angular/core';
 import { Message, MessageStatus } from '../chat-store/chat.model';
 
 @Component({
-  selector: 'app-message',
-  templateUrl: './message.component.html',
-  styleUrls: ['./message.component.scss'],
+  selector: 'app-chat-message',
+  templateUrl: './chat-message.component.html',
+  styleUrls: ['./chat-message.component.scss'],
 })
-export class MessageComponent {
+export class ChatMessageComponent {
   @Input() message!: Message;
   @Input() authenticatedUserId!: string | null;
   @Input() authenticatedUsername!: string | null;
