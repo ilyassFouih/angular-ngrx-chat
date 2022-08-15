@@ -1,15 +1,28 @@
-
-<h1>Login in</h1>
+<h1>Login</h1>
 <h4>Please enter whatever credentials</h4>
 
 <form [formGroup]="form" (submit)="submit()">
   <!-- username -->
-  <input formControlName="username" type="text" placeholder="enter your username"  />
-  <div *ngIf="form.controls.username.touched && form.controls.username.errors?.['required']" class="error-message">Username is required</div>
+  <input
+    formControlName="username"
+    type="text"
+    placeholder="enter your username" />
+  <div
+    *ngIf="form.controls.username.touched && form.controls.username.errors?.['required']"
+    class="error-message">
+    Username is required
+  </div>
 
   <!-- password -->
-  <input formControlName="password" type="password" placeholder="enter your password"  />
-  <div *ngIf="form.controls.password.touched && form.controls.password.errors?.['required']" class="error-message">Password is required</div>
+  <input
+    formControlName="password"
+    type="password"
+    placeholder="enter your password" />
+  <div
+    *ngIf="form.controls.password.touched && form.controls.password.errors?.['required']"
+    class="error-message">
+    Password is required
+  </div>
 
   <!-- submit -->
   <button type="submit">Submit</button>
