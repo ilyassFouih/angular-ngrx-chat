@@ -1,17 +1,74 @@
 div {
-  padding: 16px;
-  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
   width: 75%;
-  color: white;
+  color: black;
+  position: relative;
 
   &.my-message {
-    background-color: #0084ff;
+    background-color: #7D95FA;
+    border-radius: 10px 1px 10px 10px;
     float: right;
   }
 
-  &.external-message {
-    background-color: #505050;
-    float: left;
+  &.my-message::before {
+    content: '';
+    background-image: url('/assets/svgs/right-message.svg');
+    display: block;
+    width: 10px;
+    height: 28px;
+    position: absolute;
+    right: -6px;
+    top: 0;
   }
 
+  &.external-message {
+    background-color: #D6D6D6;
+    float: left;
+    border-radius: 1px 10px 10px 10px;
+  }
+
+  &.external-message::before {
+    content: '';
+    background-image: url('/assets/svgs/left-message.svg');
+    display: block;
+    width: 10px;
+    height: 28px;
+    position: absolute;
+    left: -6px;
+    top: 0;
+  }
+
+  h1 {
+    margin-bottom: .5rem;
+
+    img {
+      margin-right: .5rem;
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+
+  span {
+    position: absolute;
+    bottom: -1rem;
+    font-size: .75rem;
+  }
+
+  &.my-message>span {
+    right: .25rem;
+  }
+
+
+}
+.pending {
+  animation: beat 1.5s infinite alternate;
+
+  @keyframes beat {
+    to {
+      transform: scale(0.8);
+    }
+  }
 }

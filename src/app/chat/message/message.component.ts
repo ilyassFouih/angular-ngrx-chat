@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { Message, MessageStatus } from '../chat-store/chat.model';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+
+import { Message, MessageStatus, UserStatus } from '../chat-store/chat.model';
 import { UserDataPipe } from './user-data.pipe';
 
 @Component({
@@ -10,9 +11,17 @@ import { UserDataPipe } from './user-data.pipe';
   standalone: true,
   imports: [CommonModule, UserDataPipe],
 })
-export class MessageComponent {
+export class MessageComponent implements OnChanges {
   @Input() message!: Message;
-  @Input() authenticatedUserId!: string | null;
-  @Input() authenticatedUsername!: string | null;
-  protected readonly MessageStatus = MessageStatus;
+  @Input() authUserName!: string | null;
+  @Input() authUserId!: string | null;
+
+  isExternalMessage!: boolean;
+  protected PENDING = MessageStatus.PENDING;
+  protected ONLINE = UserStatus.ONLINE;
+
+  ngOnChanges({ message, authUserId }: SimpleChanges): void {
+    if (message && authUserId)
+      this.isExternalMessage = this.message.userId !== this.authUserId;
+  }
 }

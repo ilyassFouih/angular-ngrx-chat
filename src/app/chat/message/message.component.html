@@ -1,21 +1,27 @@
-<div
-  [ngClass]="{
-    'my-message': authenticatedUserId === message.userId,
-    'external-message': authenticatedUserId !== message.userId
+<div [ngClass]="{
+    'my-message': !isExternalMessage,
+    'external-message': isExternalMessage,
+    'pending':message.status===PENDING
   }">
-  {{ message.body }}
-  <ng-container *ngIf="message.status === MessageStatus.PENDING">{{
-    message.status
-  }}</ng-container>
 
-  <ng-container *ngIf="authenticatedUserId === message.userId">
-    {{ authenticatedUsername }} at {{ message.time | date: 'h:mm:ss' }}
-  </ng-container>
+  <h1>
+    <ng-container *ngIf="isExternalMessage && (message.userId | userData|async) as user;else externalTitleTpl">
+        <img src="assets/svgs/{{user.status === ONLINE?'online':'offline'}}.svg" width="13" alt="user online status">
+        {{user.name}}
+    </ng-container>
+    <ng-template #externalTitleTpl>
+      {{authUserName}}
+    </ng-template>
+  </h1>
+  <p> {{message.body}} </p>
 
-  <ng-container *ngIf="authenticatedUserId !== message.userId">
-    <ng-container *ngIf="message.userId | userData | async as user"
-      >{{ user.name }} at {{ message.time | date: 'h:mm:ss' }},
-      {{ user.status }}</ng-container
-    >
-  </ng-container>
+  <span [class.pending]="message.status===PENDING">
+    <ng-container *ngIf="message.status!==PENDING; else pendingTPL">
+      {{ message.time | date :' MM mm ,at h:mm' }}
+    </ng-container>
+    <ng-template #pendingTPL>
+      Pending...
+    </ng-template>
+
+  </span>
 </div>
