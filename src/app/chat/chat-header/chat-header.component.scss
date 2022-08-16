@@ -1,13 +1,9 @@
 :host {
-  h1 {
-    text-align: center;
-  }
 
-  h4 {
+  h1{
     text-align: center;
-    color: #6d6d6d;
+    margin-bottom: .5rem;
   }
-
   .wrapper-center {
     flex-flow: row !important;
     justify-content: center;
@@ -31,15 +27,8 @@
 
   form {
     display: flex;
-    flex-flow: row;
+    gap: .5rem;
 
-    input {
-      min-width: 175px;
-    }
-
-    button {
-      width: 325px;
-    }
 
     .cancel-button {
       background-color: #6a6a6a;
