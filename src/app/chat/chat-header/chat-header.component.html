@@ -19,32 +19,30 @@
         formControlName="username"
         type="text"
         placeholder="enter your new username" />
-        <!-- required error -->
-        <div
-          *ngIf="form.controls.username.errors?.['required']"
-          class="error-message">
-          Username is required
-        </div>
-      
-        <!-- min width error -->
-        <div
-          *ngIf="form.controls.username.errors?.['minlength']"
-          class="error-message">
-          Username min length is 6 characters
-        </div>
-      
-        <!-- max width error -->
-        <div
-          *ngIf="form.controls.username.errors?.['maxlength']"
-          class="error-message">
-          Username max length is 20 characters
-        </div>
+      <!-- required error -->
+      <div
+        *ngIf="form.controls.username.errors?.['required']"
+        class="error-message">
+        Username is required
+      </div>
 
+      <!-- min width error -->
+      <div
+        *ngIf="form.controls.username.errors?.['minlength']"
+        class="error-message">
+        Username min length is 6 characters
+      </div>
+
+      <!-- max width error -->
+      <div
+        *ngIf="form.controls.username.errors?.['maxlength']"
+        class="error-message">
+        Username max length is 20 characters
+      </div>
     </div>
     <button type="submit">change name</button>
     <button type="button" class="cancel-button" (click)="onEditUsername()">
       cancel
     </button>
   </form>
-
 </ng-container>

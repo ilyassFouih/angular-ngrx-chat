@@ -4,22 +4,22 @@
   align-items: center;
   justify-content: center;
 
-  .card{
+  .card {
     padding: 4rem;
-    h2{
+
+    h2 {
       margin-bottom: 3rem;
     }
 
-    form{
-      .form-group{
+    form {
+      .form-group {
         margin-bottom: 1rem;
       }
-      
-      button{
+
+      button {
         width: 100%;
         margin-bottom: 1rem;
       }
     }
   }
-
 }
