@@ -4,20 +4,36 @@
 
   <!-- messages -->
   <div *ngIf="userData$ | async as authUser" class="message-wrapper">
-    <app-message *ngFor="let message of messages$ | async" 
-      [message]="message"
-      [authUserName]="authUser.username"
-      [authUserId]="authUser.userId"
-      >
-    </app-message>
+    <ng-container *ngFor="let message of messages$ | async">
+      <app-message
+        *ngIf="{
+          connectedIsSender: message.userId === authUser.userId,
+          user: message.userId | getUserById | async
+        } as messageExtraInfos"
+        [message]="message"
+        [connectedUserIsSender]="messageExtraInfos.connectedIsSender"
+        [userStatus]="messageExtraInfos.user?.status"
+        [userName]="
+          messageExtraInfos.connectedIsSender
+            ? authUser.username
+            : messageExtraInfos.user?.name
+        ">
+      </app-message>
+    </ng-container>
   </div>
 
   <!-- form -->
   <form [formGroup]="form" (submit)="sendMessage()">
     <div class="form-control">
-      <input formControlName="message" type="text" placeholder="enter your text" />
-      <div *ngIf="form.controls.message.touched && form.controls.message.errors?.['required']" class="error-message">
-        Please enter a message.</div>
+      <input
+        formControlName="message"
+        type="text"
+        placeholder="enter your text" />
+      <div
+        *ngIf="form.controls.message.touched && form.controls.message.errors?.['required']"
+        class="error-message">
+        Please enter a message.
+      </div>
     </div>
     <button type="submit">Submit</button>
   </form>
