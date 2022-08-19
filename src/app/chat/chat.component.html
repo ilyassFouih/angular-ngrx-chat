@@ -8,7 +8,7 @@
       <app-message
         *ngIf="{
           connectedIsSender: message.userId === authUser.userId,
-          user: message.userId | getUserById | async
+          user: message.userId | userById | async
         } as messageExtraInfos"
         [message]="message"
         [connectedUserIsSender]="messageExtraInfos.connectedIsSender"

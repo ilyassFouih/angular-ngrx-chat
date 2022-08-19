@@ -4,10 +4,10 @@ import { User } from '../chat-store/chat.model';
 import { ChatStore } from '../chat-store/chat.store';
 
 @Pipe({
-  name: 'getUserById',
+  name: 'userById',
   standalone: true,
 })
-export class getUserById implements PipeTransform {
+export class UserById implements PipeTransform {
   constructor(private readonly store: ChatStore) {}
 
   public transform(userId: string): Observable<User | undefined> {
